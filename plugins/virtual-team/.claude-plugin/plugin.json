@@ -1,0 +1,25 @@
+{
+  "name": "virtual-team",
+  "version": "1.0.0",
+  "description": "A virtual software team of 14 specialized personas for Claude Code. Each skill embodies a distinct role with its own mental model and priorities — from brainstorming to security review. Auto-triggers based on context or invoke manually via slash commands.",
+  "author": {
+    "name": "virtual-team"
+  },
+  "license": "MIT",
+  "keywords": [
+    "personas",
+    "team",
+    "brainstorm",
+    "architect",
+    "developer",
+    "debugger",
+    "reviewer",
+    "qa",
+    "security",
+    "optimizer",
+    "analyst",
+    "ux",
+    "strategy",
+    "workflow"
+  ]
+}
