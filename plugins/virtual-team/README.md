@@ -1,6 +1,6 @@
 # Virtual Team — Claude Code Plugin
 
-A virtual software team of 14 specialized personas for Claude Code. Each skill embodies a distinct role with its own mental model, priorities, and output style.
+A virtual software team of 15 specialized personas for Claude Code. Each skill embodies a distinct role with its own mental model, priorities, and output style.
 
 ## The Team
 
@@ -8,18 +8,19 @@ A virtual software team of 14 specialized personas for Claude Code. Each skill e
 |---|---|---|---|
 | 1 | **Rewriter** | `/virtual-team:rewriter` | Clarify intent before anything runs |
 | 2 | **Brainstormer** | `/virtual-team:brainstormer` | Go wide. No judgment. What could exist? |
-| 3 | **Strategist** | `/virtual-team:strategist` | Worth it? Scope it. Plan it. Prioritize. |
-| 4 | **Architect** | `/virtual-team:architect` | Right structure, stack, patterns, contracts |
-| 5 | **UX Thinker** | `/virtual-team:ux-thinker` | What does the user see, feel, and do? |
-| 6 | **Explorer** | `/virtual-team:explorer` | Map the territory. What exists? How does it flow? |
-| 7 | **Doc Keeper** | `/virtual-team:doc-keeper` | Surface context before. Update docs after. |
-| 8 | **Developer** | `/virtual-team:developer` | Build it clean, build it now |
-| 9 | **Debugger** | `/virtual-team:debugger` | Hypothesize → trace → eliminate |
-| 10 | **Optimizer** | `/virtual-team:optimizer` | Measure → profile → improve → measure |
-| 11 | **Reviewer** | `/virtual-team:reviewer` | Structure + quality + edge cases + regret |
-| 12 | **QA** | `/virtual-team:qa` | Prove it works. Prove it can't break. |
-| 13 | **Analyst** | `/virtual-team:analyst` | What does the data say? What to do about it? |
-| 14 | **Security** | `/virtual-team:security` | How can someone break into this? |
+| 3 | **Strategist** | `/virtual-team:strategist` | Worth it? Scope to MVP. Prioritize. |
+| 4 | **Engineering Manager** | `/virtual-team:engineering-manager` | Break MVP into sprints and tasks. Ship it. |
+| 5 | **Architect** | `/virtual-team:architect` | Right structure, stack, patterns, contracts |
+| 6 | **UX Thinker** | `/virtual-team:ux-thinker` | What does the user see, feel, and do? |
+| 7 | **Explorer** | `/virtual-team:explorer` | Map the territory. What exists? How does it flow? |
+| 8 | **Doc Keeper** | `/virtual-team:doc-keeper` | Surface context before. Update docs after. |
+| 9 | **Developer** | `/virtual-team:developer` | Build it clean, build it now |
+| 10 | **Debugger** | `/virtual-team:debugger` | Hypothesize → trace → eliminate |
+| 11 | **Optimizer** | `/virtual-team:optimizer` | Measure → profile → improve → measure |
+| 12 | **Reviewer** | `/virtual-team:reviewer` | Structure + quality + edge cases + regret |
+| 13 | **QA** | `/virtual-team:qa` | Prove it works. Prove it can't break. |
+| 14 | **Analyst** | `/virtual-team:analyst` | What does the data say? What to do about it? |
+| 15 | **Security** | `/virtual-team:security` | How can someone break into this? |
 
 ## How It Works
 
@@ -31,7 +32,7 @@ A virtual software team of 14 specialized personas for Claude Code. Each skill e
 
 ```
 IDEA → APP:
-  brainstormer → strategist → architect → ux-thinker → developer → reviewer → qa → security → doc-keeper
+  brainstormer → strategist → engineering-manager → architect → ux-thinker → developer → reviewer → qa → security → doc-keeper
 
 BUG FIX:
   explorer → debugger → developer → reviewer → qa
@@ -103,6 +104,7 @@ virtual-team/
     ├── rewriter/SKILL.md
     ├── brainstormer/SKILL.md
     ├── strategist/SKILL.md
+    ├── engineering-manager/SKILL.md
     ├── architect/SKILL.md
     ├── ux-thinker/SKILL.md
     ├── explorer/SKILL.md
