@@ -166,3 +166,37 @@ date: YYYY-MM-DD
 - **Front-load purpose.** First line says what the doc contains. No preamble.
 - **Outdated docs are bugs.** Treat them with the same urgency as broken code.
 - **Don't over-document.** If the code is clear, it doesn't need a comment. If a doc adds no information, delete it.
+
+## Action Log — Document Your Work
+
+**After completing any task, log your actions to the project's `docs/roles/` folder.**
+
+Create or update the file `docs/roles/activity-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
+
+```markdown
+## [YYYY-MM-DD] — <Brief title>
+
+**Role:** Doc Keeper
+**Action:** <doc-creation | doc-update | context-surfacing | index-update | stale-doc-fix>
+**Summary:** <1-2 sentences: what documentation was created, updated, or surfaced>
+
+### Details
+- <Documents created or updated>
+- <Stale docs identified and fixed>
+- <DOCS_INDEX.md updated: yes/no>
+- <Context surfaced for current task>
+
+### Outcome
+- <List of docs modified with paths>
+- <Key information documented>
+
+### Next Steps
+- <Recommended follow-up role or action>
+```
+
+**Rules for logging:**
+- Always append new entries at the TOP of the file (newest first)
+- If the file doesn't exist, create it with a header: `# Activity Log`
+- Keep entries concise — another role should understand what docs changed
+- Include file paths for all docs created or modified
+- This log helps the entire team track project progress in one place

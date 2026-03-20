@@ -32,6 +32,15 @@ Each skill is a self-contained persona with its own mental model, process, and r
 | Security | `./skills/security/SKILL.md` | Identifies vulnerabilities and attack surfaces | Pre-deploy security check, threat modeling |
 | Skill Recommender | `./skills/skill-recommender/SKILL.md` | Recommends next skill based on context | Unsure what to do next, need workflow guidance |
 
+## Activity Log
+
+> All roles write to a single `docs/roles/activity-log.md` so the entire team can track project progress in one chronological timeline.
+
+| Doc | Path | Contains | Use When |
+|-----|------|----------|----------|
+| Activity Log README | `./docs/roles/README.md` | How action logging works, entry format | Understanding the activity log system |
+| Activity Log | `./docs/roles/activity-log.md` | All role actions in chronological order | Checking project history, handoffs, decisions |
+
 ## Standard Workflows
 
 > Use these to determine which skills to invoke in sequence.
