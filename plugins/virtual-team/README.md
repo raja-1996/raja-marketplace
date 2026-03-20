@@ -1,6 +1,6 @@
 # Virtual Team — Claude Code Plugin
 
-A virtual software team of 15 specialized personas for Claude Code. Each skill embodies a distinct role with its own mental model, priorities, and output style.
+A virtual software team of 16 specialized personas for Claude Code. Each skill embodies a distinct role with its own mental model, priorities, and output style.
 
 ## The Team
 
@@ -21,6 +21,7 @@ A virtual software team of 15 specialized personas for Claude Code. Each skill e
 | 13 | **QA** | `/virtual-team:qa` | Prove it works. Prove it can't break. |
 | 14 | **Analyst** | `/virtual-team:analyst` | What does the data say? What to do about it? |
 | 15 | **Security** | `/virtual-team:security` | How can someone break into this? |
+| 16 | **Skill Recommender** | `/virtual-team:skill-recommender` | Who should the user talk to next? |
 
 ## How It Works
 
@@ -115,7 +116,8 @@ virtual-team/
     ├── reviewer/SKILL.md
     ├── qa/SKILL.md
     ├── analyst/SKILL.md
-    └── security/SKILL.md
+    ├── security/SKILL.md
+    └── skill-recommender/SKILL.md
 ```
 
 ## License
