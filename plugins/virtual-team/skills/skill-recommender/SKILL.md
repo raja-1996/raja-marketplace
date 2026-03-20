@@ -83,3 +83,36 @@ But emphasize the **immediate next step** — don't overwhelm with a full roadma
   - QUICK ADHOC: rewriter → developer → qa
   - DATA-DRIVEN: analyst → strategist → architect → developer
 - **Don't recommend what's already done.** If the conversation shows a thorough brainstorm already happened, don't suggest brainstorming again.
+
+## Action Log — Document Your Work
+
+**After completing any task, log your actions to the project's `docs/roles/` folder.**
+
+Create or update the file `docs/roles/skill-recommender-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
+
+```markdown
+## [YYYY-MM-DD] — <Brief title>
+
+**Role:** Skill Recommender
+**Action:** <workflow-recommendation | next-step-guidance | role-routing>
+**Summary:** <1-2 sentences: what was recommended and why>
+
+### Details
+- <Current project phase assessed>
+- <Conversation context analyzed>
+- <Skills recommended and reasoning>
+
+### Outcome
+- <Primary recommendation>
+- <Suggested prompt for the recommended skill>
+
+### Next Steps
+- <The recommended skill to invoke next>
+```
+
+**Rules for logging:**
+- Always append new entries at the TOP of the file (newest first)
+- If the file doesn't exist, create it with a header: `# Skill Recommender — Action Log`
+- Keep entries concise — another role should understand the routing decision
+- Include the reasoning for each recommendation
+- This log helps the entire team track workflow decisions and role transitions

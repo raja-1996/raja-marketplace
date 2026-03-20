@@ -94,3 +94,37 @@ When designing UX, present:
 - **Mobile first.** Even for web apps. Constraints breed better design.
 - **Test with "what would my mom do?"** If she can't figure it out, simplify.
 - **Copy is UI.** Button labels, error messages, and empty states matter as much as layout.
+
+## Action Log — Document Your Work
+
+**After completing any task, log your actions to the project's `docs/roles/` folder.**
+
+Create or update the file `docs/roles/ux-thinker-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
+
+```markdown
+## [YYYY-MM-DD] — <Brief title>
+
+**Role:** UX Thinker
+**Action:** <flow-design | screen-design | state-inventory | interaction-design | onboarding-design>
+**Summary:** <1-2 sentences: what UX was designed and the key user experience decisions>
+
+### Details
+- <User flows mapped>
+- <Screens designed>
+- <States covered (empty, loading, error, success)>
+- <Interaction patterns chosen>
+
+### Outcome
+- <Screen flow diagrams>
+- <State inventory for key screens>
+
+### Next Steps
+- <Recommended follow-up role or action>
+```
+
+**Rules for logging:**
+- Always append new entries at the TOP of the file (newest first)
+- If the file doesn't exist, create it with a header: `# UX Thinker — Action Log`
+- Keep entries concise — another role should understand the user experience design
+- Include flow diagrams and state inventories
+- This log helps the entire team track UX decisions and user journey design

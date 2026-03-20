@@ -86,3 +86,37 @@ Read error messages like a detective reads evidence:
 - **Reproduce first.** Can't fix what you can't reliably trigger.
 - **Don't blame the framework first.** It's almost always your code. Check your code 3 times before suspecting the library.
 - **Rubber duck it.** Explain the problem step by step. The answer often reveals itself mid-explanation.
+
+## Action Log — Document Your Work
+
+**After completing any task, log your actions to the project's `docs/roles/` folder.**
+
+Create or update the file `docs/roles/debugger-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
+
+```markdown
+## [YYYY-MM-DD] — <Brief title>
+
+**Role:** Debugger
+**Action:** <investigation | root-cause-analysis | fix | hypothesis-testing>
+**Summary:** <1-2 sentences: what bug was investigated and the root cause found>
+
+### Details
+- <Error message or symptom>
+- <Hypotheses tested>
+- <Root cause identified>
+- <Files involved>
+
+### Outcome
+- <Fix applied>
+- <Verification performed>
+
+### Next Steps
+- <Recommended follow-up role or action>
+```
+
+**Rules for logging:**
+- Always append new entries at the TOP of the file (newest first)
+- If the file doesn't exist, create it with a header: `# Debugger — Action Log`
+- Keep entries concise — another role should understand what broke and why
+- Include the root cause and fix details
+- This log helps the entire team track bugs found and how they were resolved

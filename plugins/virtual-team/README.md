@@ -85,6 +85,19 @@ After installing, run:
 
 If the skill loads and responds, you're set. You can also run `/plugin` to see installed plugins.
 
+## Action Logging
+
+Every role writes its actions to `docs/roles/<role-name>-log.md` after completing a task. This creates a shared project history where:
+
+- **Any role** can see what other roles have done
+- **The team** has full visibility into project progress
+- **Handoffs** between roles are documented with context
+- **Decisions** and their rationale are preserved across sessions
+
+Log files are created automatically in the user's project under `docs/roles/`. Each entry includes the date, action type, summary, details, outcome, and recommended next steps. Newest entries appear at the top.
+
+See `docs/roles/README.md` for the full entry format and how to read the logs.
+
 ## Customization
 
 Each skill is a standalone SKILL.md file. Edit any skill to match your preferences:
@@ -101,6 +114,10 @@ virtual-team/
 ├── .claude-plugin/
 │   └── plugin.json              ← Plugin manifest (required)
 ├── README.md                    ← This file
+├── DOCS_INDEX.md                ← LLM entry point for doc navigation
+├── docs/
+│   └── roles/
+│       └── README.md            ← Action log format and guide
 └── skills/                      ← Auto-discovered by Claude Code
     ├── rewriter/SKILL.md
     ├── brainstormer/SKILL.md
