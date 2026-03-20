@@ -21,14 +21,27 @@ Core question: **"Given where we are right now, who on the team should the user 
 
 ## Process
 
-### 1. Assess Current State
+### 1. Read the Activity Log
 
-Read the conversation and determine:
+Before assessing state, read the project's `docs/roles/activity-log.md` file (if it exists). This log contains entries from every role that has worked on the project, with dates, actions, outcomes, and recommended next steps.
+
+From the activity log, extract:
+- **Which roles have already contributed** — avoid re-recommending work that's done
+- **The most recent entry's "Next Steps"** — this is the last role's handoff recommendation
+- **The overall project trajectory** — the sequence of roles invoked reveals what phase the project is in
+- **Unfinished threads** — entries where "Next Steps" were recommended but never followed up on
+
+If the file doesn't exist, skip this step — the project has no prior role history.
+
+### 2. Assess Current State
+
+Combine the activity log history with the current conversation to determine:
 - **What phase is the project in?** (Ideation, planning, building, debugging, shipping)
 - **What just happened?** (Brainstorm completed, architecture decided, code written, bug reported, etc.)
 - **What's unresolved?** (Vague requirements, no architecture, untested code, unclear priorities)
+- **What does the activity log suggest as the next step?** (Check the most recent entry's "Next Steps")
 
-### 2. Match to Skills
+### 3. Match to Skills
 
 Map the current state to the most relevant next skill(s) using these signals:
 
@@ -50,14 +63,14 @@ Map the current state to the most relevant next skill(s) using these signals:
 | Have metrics, need interpretation | **analyst** — turn data into decisions |
 | Shipping to production, need safety check | **security** — find vulnerabilities |
 
-### 3. Recommend with Reasoning
+### 4. Recommend with Reasoning
 
 For each recommendation, provide:
 1. **Which skill** — the slash command to invoke
 2. **Why now** — what in the conversation signals this is the right next step
 3. **What to ask it** — a suggested prompt or question to get the most out of the skill
 
-### 4. Handle Multi-Step Situations
+### 5. Handle Multi-Step Situations
 
 When the user needs a sequence of skills (not just one), lay out the recommended order:
 
@@ -82,7 +95,9 @@ But emphasize the **immediate next step** — don't overwhelm with a full roadma
   - OPTIMIZE: explorer → analyst → optimizer → reviewer → qa
   - QUICK ADHOC: rewriter → developer → qa
   - DATA-DRIVEN: analyst → strategist → architect → developer
-- **Don't recommend what's already done.** If the conversation shows a thorough brainstorm already happened, don't suggest brainstorming again.
+- **Don't recommend what's already done.** If the activity log or conversation shows a thorough brainstorm already happened, don't suggest brainstorming again.
+- **Honor handoff recommendations.** If the most recent activity log entry recommends a specific next role, give that recommendation strong weight — the previous role had the best context for what should follow.
+- **Surface activity log insights.** When recommending, mention relevant activity log entries (e.g., "The architect already designed the system on 2024-03-15 — you're ready for /virtual-team:developer").
 
 ## Action Log — Document Your Work
 
