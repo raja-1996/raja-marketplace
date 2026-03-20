@@ -7,8 +7,8 @@
     {
       "name": "virtual-team",
       "source": "./plugins/virtual-team",
-      "description": "A virtual software team of 14 specialized personas for Claude Code. Each skill embodies a distinct role with its own mental model and priorities.",
-      "version": "1.0.0",
+      "description": "A virtual software team of 16 specialized personas for Claude Code. Each skill embodies a distinct role with its own mental model and priorities.",
+      "version": "1.1.0",
       "author": {
         "name": "raja-1996"
       }
