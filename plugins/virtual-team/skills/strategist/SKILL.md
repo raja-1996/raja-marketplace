@@ -69,7 +69,7 @@ Once the MVP is defined and prioritized, hand off to **engineering-manager** for
 
 **After completing any task, log your actions to the project's `docs/roles/` folder.**
 
-Create or update the file `docs/roles/strategist-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
+Create or update the file `docs/roles/activity-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
 
 ```markdown
 ## [YYYY-MM-DD] — <Brief title>
@@ -93,7 +93,7 @@ Create or update the file `docs/roles/strategist-log.md` in the user's project. 
 
 **Rules for logging:**
 - Always append new entries at the TOP of the file (newest first)
-- If the file doesn't exist, create it with a header: `# Strategist — Action Log`
+- If the file doesn't exist, create it with a header: `# Activity Log`
 - Keep entries concise — another role should understand what was decided and why
 - Include the reasoning behind build/no-build decisions
-- This log helps the entire team track strategic decisions and MVP scope
+- This log helps the entire team track project progress in one place

@@ -66,7 +66,7 @@ Each task needs:
 
 **After completing any task, log your actions to the project's `docs/roles/` folder.**
 
-Create or update the file `docs/roles/engineering-manager-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
+Create or update the file `docs/roles/activity-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
 
 ```markdown
 ## [YYYY-MM-DD] — <Brief title>
@@ -91,7 +91,7 @@ Create or update the file `docs/roles/engineering-manager-log.md` in the user's 
 
 **Rules for logging:**
 - Always append new entries at the TOP of the file (newest first)
-- If the file doesn't exist, create it with a header: `# Engineering Manager — Action Log`
+- If the file doesn't exist, create it with a header: `# Activity Log`
 - Keep entries concise — another role should understand the execution plan
 - Include sprint goals and task counts
-- This log helps the entire team track how work was organized and sequenced
+- This log helps the entire team track project progress in one place

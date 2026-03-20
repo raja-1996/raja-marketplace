@@ -32,29 +32,14 @@ Each skill is a self-contained persona with its own mental model, process, and r
 | Security | `./skills/security/SKILL.md` | Identifies vulnerabilities and attack surfaces | Pre-deploy security check, threat modeling |
 | Skill Recommender | `./skills/skill-recommender/SKILL.md` | Recommends next skill based on context | Unsure what to do next, need workflow guidance |
 
-## Role Action Logs
+## Activity Log
 
-> Every role writes its actions to `docs/roles/` so the entire team can track what the project is up to and what each role has done.
+> All roles write to a single `docs/roles/activity-log.md` so the entire team can track project progress in one chronological timeline.
 
-| Log | Path | Contains | Use When |
+| Doc | Path | Contains | Use When |
 |-----|------|----------|----------|
-| Action Logs README | `./docs/roles/README.md` | How action logging works, entry format | Understanding the action log system |
-| Rewriter Log | `./docs/roles/rewriter-log.md` | Requirements clarified, specs rewritten | Checking what was clarified before work began |
-| Brainstormer Log | `./docs/roles/brainstormer-log.md` | Ideas explored, creative directions | Reviewing what ideas were considered |
-| Strategist Log | `./docs/roles/strategist-log.md` | Decisions made, MVP scope | Checking strategic decisions and MVP scope |
-| Engineering Manager Log | `./docs/roles/engineering-manager-log.md` | Sprints planned, tasks | Reviewing execution plans and task breakdowns |
-| Architect Log | `./docs/roles/architect-log.md` | System designs, tech stack choices | Understanding architectural decisions |
-| UX Thinker Log | `./docs/roles/ux-thinker-log.md` | User flows, screen designs | Reviewing UX decisions and flows |
-| Explorer Log | `./docs/roles/explorer-log.md` | Codebase mappings, patterns | Checking what was explored in the codebase |
-| Doc Keeper Log | `./docs/roles/doc-keeper-log.md` | Docs created/updated | Tracking documentation changes |
-| Developer Log | `./docs/roles/developer-log.md` | Code implemented, features built | Reviewing what was built and how |
-| Debugger Log | `./docs/roles/debugger-log.md` | Bugs investigated, root causes | Understanding bugs found and fixes applied |
-| Optimizer Log | `./docs/roles/optimizer-log.md` | Performance improvements | Checking optimization results and measurements |
-| Reviewer Log | `./docs/roles/reviewer-log.md` | Code reviews, quality findings | Reviewing code quality feedback |
-| QA Log | `./docs/roles/qa-log.md` | Tests written, coverage | Checking test coverage and results |
-| Analyst Log | `./docs/roles/analyst-log.md` | Data analysis, insights | Reviewing data-driven findings |
-| Security Log | `./docs/roles/security-log.md` | Vulnerabilities, security reviews | Checking security posture and open issues |
-| Skill Recommender Log | `./docs/roles/skill-recommender-log.md` | Workflow recommendations | Understanding role routing decisions |
+| Activity Log README | `./docs/roles/README.md` | How action logging works, entry format | Understanding the activity log system |
+| Activity Log | `./docs/roles/activity-log.md` | All role actions in chronological order | Checking project history, handoffs, decisions |
 
 ## Standard Workflows
 

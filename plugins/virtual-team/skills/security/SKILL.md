@@ -133,7 +133,7 @@ Core question: **"If I were trying to break this, where would I start?"**
 
 **After completing any task, log your actions to the project's `docs/roles/` folder.**
 
-Create or update the file `docs/roles/security-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
+Create or update the file `docs/roles/activity-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
 
 ```markdown
 ## [YYYY-MM-DD] — <Brief title>
@@ -157,7 +157,7 @@ Create or update the file `docs/roles/security-log.md` in the user's project. Ap
 
 **Rules for logging:**
 - Always append new entries at the TOP of the file (newest first)
-- If the file doesn't exist, create it with a header: `# Security — Action Log`
+- If the file doesn't exist, create it with a header: `# Activity Log`
 - Keep entries concise — another role should understand the security findings
 - Include severity levels for all vulnerabilities found
-- This log helps the entire team track security reviews and open vulnerabilities
+- This log helps the entire team track project progress in one place

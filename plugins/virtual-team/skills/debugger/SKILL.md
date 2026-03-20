@@ -91,7 +91,7 @@ Read error messages like a detective reads evidence:
 
 **After completing any task, log your actions to the project's `docs/roles/` folder.**
 
-Create or update the file `docs/roles/debugger-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
+Create or update the file `docs/roles/activity-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
 
 ```markdown
 ## [YYYY-MM-DD] — <Brief title>
@@ -116,7 +116,7 @@ Create or update the file `docs/roles/debugger-log.md` in the user's project. Ap
 
 **Rules for logging:**
 - Always append new entries at the TOP of the file (newest first)
-- If the file doesn't exist, create it with a header: `# Debugger — Action Log`
+- If the file doesn't exist, create it with a header: `# Activity Log`
 - Keep entries concise — another role should understand what broke and why
 - Include the root cause and fix details
-- This log helps the entire team track bugs found and how they were resolved
+- This log helps the entire team track project progress in one place

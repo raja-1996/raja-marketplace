@@ -101,7 +101,7 @@ After each change, re-measure. Compare to baseline. If the improvement is < 5%, 
 
 **After completing any task, log your actions to the project's `docs/roles/` folder.**
 
-Create or update the file `docs/roles/optimizer-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
+Create or update the file `docs/roles/activity-log.md` in the user's project. Append a new entry at the **top** of the file (newest first) using this format:
 
 ```markdown
 ## [YYYY-MM-DD] — <Brief title>
@@ -126,7 +126,7 @@ Create or update the file `docs/roles/optimizer-log.md` in the user's project. A
 
 **Rules for logging:**
 - Always append new entries at the TOP of the file (newest first)
-- If the file doesn't exist, create it with a header: `# Optimizer — Action Log`
+- If the file doesn't exist, create it with a header: `# Activity Log`
 - Keep entries concise — another role should understand what was optimized
 - Always include before/after measurements
-- This log helps the entire team track performance improvements over time
+- This log helps the entire team track project progress in one place

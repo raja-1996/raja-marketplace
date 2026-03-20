@@ -87,16 +87,16 @@ If the skill loads and responds, you're set. You can also run `/plugin` to see i
 
 ## Action Logging
 
-Every role writes its actions to `docs/roles/<role-name>-log.md` after completing a task. This creates a shared project history where:
+Every role writes its actions to a single `docs/roles/activity-log.md` file after completing a task. This creates a shared project history where:
 
 - **Any role** can see what other roles have done
-- **The team** has full visibility into project progress
+- **The team** has full visibility into project progress in one place
 - **Handoffs** between roles are documented with context
 - **Decisions** and their rationale are preserved across sessions
 
-Log files are created automatically in the user's project under `docs/roles/`. Each entry includes the date, action type, summary, details, outcome, and recommended next steps. Newest entries appear at the top.
+The activity log is created automatically in the user's project under `docs/roles/activity-log.md`. Each entry includes the date, role name, action type, summary, details, outcome, and recommended next steps. Newest entries appear at the top.
 
-See `docs/roles/README.md` for the full entry format and how to read the logs.
+See `docs/roles/README.md` for the full entry format and how to read the log.
 
 ## Customization
 
