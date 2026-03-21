@@ -31,6 +31,7 @@ Each skill is a self-contained persona with its own mental model, process, and r
 | Analyst | `./skills/analyst/SKILL.md` | Interprets data to drive decisions | Have metrics/data, need insights |
 | Security | `./skills/security/SKILL.md` | Identifies vulnerabilities and attack surfaces | Pre-deploy security check, threat modeling |
 | Skill Recommender | `./skills/skill-recommender/SKILL.md` | Recommends next skill based on context | Unsure what to do next, need workflow guidance |
+| Orchestrator | `./skills/orchestrator/SKILL.md` | Plans and delegates to sub-agents (never executes directly) | Multi-step work, sprint execution, orchestrated feature builds |
 
 ## Activity Log
 
@@ -52,3 +53,13 @@ Each skill is a self-contained persona with its own mental model, process, and r
 | Optimize | explorer → analyst → optimizer → reviewer → qa | Performance issues |
 | Quick Adhoc | rewriter → developer → qa | Small, clear task |
 | Data-Driven | analyst → strategist → architect → developer | Decisions informed by data |
+| Orchestrate | orchestrator → [sub-agents from team] → synthesized result | Multi-step work requiring planning, review cycles, and sub-agent delegation |
+
+## Orchestrator References
+
+> Reference docs used by the Orchestrator skill for pattern and model selection.
+
+| Doc | Path | Contains | Use When |
+|-----|------|----------|----------|
+| Orchestration Patterns | `./references/orchestration-patterns.md` | Sub-agent types, composition patterns (linear, fan-out, iterative, escalation) | Planning an orchestration run |
+| Model Guide | `./references/model-guide.md` | Haiku/Sonnet/Opus selection heuristics per sub-agent type | Choosing model tiers in the orchestration plan |

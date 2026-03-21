@@ -62,6 +62,7 @@ Map the current state to the most relevant next skill(s) using these signals:
 | Need tests or test strategy | **qa** — prove it works |
 | Have metrics, need interpretation | **analyst** — turn data into decisions |
 | Shipping to production, need safety check | **security** — find vulnerabilities |
+| Multi-step work, sprint tasks, "orchestrate this" | **orchestrator** — plan and delegate to sub-agents |
 
 ### 4. Recommend with Reasoning
 
@@ -95,6 +96,7 @@ But emphasize the **immediate next step** — don't overwhelm with a full roadma
   - OPTIMIZE: explorer → analyst → optimizer → reviewer → qa
   - QUICK ADHOC: rewriter → developer → qa
   - DATA-DRIVEN: analyst → strategist → architect → developer
+  - ORCHESTRATE: orchestrator → [dispatches sub-agents from team] → synthesized result
 - **Don't recommend what's already done.** If the activity log or conversation shows a thorough brainstorm already happened, don't suggest brainstorming again.
 - **Honor handoff recommendations.** If the most recent activity log entry recommends a specific next role, give that recommendation strong weight — the previous role had the best context for what should follow.
 - **Surface activity log insights.** When recommending, mention relevant activity log entries (e.g., "The architect already designed the system on 2024-03-15 — you're ready for /virtual-team:developer").

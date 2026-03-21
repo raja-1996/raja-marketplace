@@ -1,6 +1,6 @@
 # Virtual Team — Claude Code Plugin
 
-A virtual software team of 16 specialized personas for Claude Code. Each skill embodies a distinct role with its own mental model, priorities, and output style.
+A virtual software team of 17 specialized personas for Claude Code. Each skill embodies a distinct role with its own mental model, priorities, and output style.
 
 ## The Team
 
@@ -22,6 +22,7 @@ A virtual software team of 16 specialized personas for Claude Code. Each skill e
 | 14 | **Analyst** | `/virtual-team:analyst` | What does the data say? What to do about it? |
 | 15 | **Security** | `/virtual-team:security` | How can someone break into this? |
 | 16 | **Skill Recommender** | `/virtual-team:skill-recommender` | Who should the user talk to next? |
+| 17 | **Orchestrator** | `/virtual-team:orchestrator` | Plan → delegate → synthesize. Never execute directly. |
 
 ## How It Works
 
@@ -46,6 +47,9 @@ QUICK ADHOC:
 
 DATA-DRIVEN DECISIONS:
   analyst → strategist → architect → developer
+
+ORCHESTRATE (multi-step with sub-agents):
+  orchestrator → [plans + dispatches sub-agents from team] → synthesized result
 ```
 
 ## Installation
@@ -134,7 +138,11 @@ virtual-team/
     ├── qa/SKILL.md
     ├── analyst/SKILL.md
     ├── security/SKILL.md
-    └── skill-recommender/SKILL.md
+    ├── skill-recommender/SKILL.md
+    └── orchestrator/SKILL.md
+├── references/                  ← Orchestrator reference docs
+    ├── orchestration-patterns.md
+    └── model-guide.md
 ```
 
 ## License
