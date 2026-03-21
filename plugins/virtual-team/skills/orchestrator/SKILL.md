@@ -56,7 +56,30 @@ A plan might include:
 - Dependencies on prior steps
 - Checkpoints where the user should review
 
-For complex or high-stakes orchestrations, present the plan to the user before executing. For straightforward tasks, use your judgment — sometimes a brief outline is enough before diving in.
+**Always print the orchestration plan before executing — no exceptions.**
+Display it in a clear, readable format like:
+
+```
+## Orchestration Plan
+
+Step 1 — Analyzer (explorer, Haiku)
+  Input:  sprint.md
+  Output: orchestrator-workspace/step-01-analysis/output.md
+
+Step 2 — Planner (engineering-manager, Sonnet)
+  Input:  step-01 output
+  Output: orchestrator-workspace/step-02-plan/output.md
+
+Step 3 — Coder (developer, Sonnet)
+  Input:  step-02 output
+  Output: orchestrator-workspace/step-03-code/
+
+...
+
+Proceeding with execution.
+```
+
+Print the plan, then immediately proceed. Do not wait for user approval unless a checkpoint is explicitly required.
 
 ## Step 3: Execute Step by Step
 
@@ -140,6 +163,16 @@ Give each sub-agent a clear virtual team identity. Example:
 - Pass relevant context rather than full conversation history
 - Specify expected output format when it matters
 - That said, use your judgment — sometimes combining related work in one sub-agent is more efficient
+
+**The Orchestrator does NOT do the work itself.**
+Sub-agent prompts should contain: task description, relevant context, file paths, constraints, and output instructions.
+Sub-agent prompts should NOT contain: pre-written code, pre-done analysis, drafted reviews, or any artifact the sub-agent is supposed to produce.
+If the orchestrator writes the answer in the prompt, the sub-agent becomes a rubber stamp — the whole point of delegation is lost.
+
+```
+❌ Bad: "Here is the login function I drafted: [code]. Please review it."
+✅ Good: "Review the login function in src/auth/login.ts. Check for security issues, edge cases, and convention compliance. Write your findings to orchestrator-workspace/step-04-review/output.md."
+```
 
 ## Guidelines
 
