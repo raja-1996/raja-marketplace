@@ -141,6 +141,16 @@ Give each sub-agent a clear virtual team identity. Example:
 - Specify expected output format when it matters
 - That said, use your judgment — sometimes combining related work in one sub-agent is more efficient
 
+**The Orchestrator does NOT do the work itself.**
+Sub-agent prompts should contain: task description, relevant context, file paths, constraints, and output instructions.
+Sub-agent prompts should NOT contain: pre-written code, pre-done analysis, drafted reviews, or any artifact the sub-agent is supposed to produce.
+If the orchestrator writes the answer in the prompt, the sub-agent becomes a rubber stamp — the whole point of delegation is lost.
+
+```
+❌ Bad: "Here is the login function I drafted: [code]. Please review it."
+✅ Good: "Review the login function in src/auth/login.ts. Check for security issues, edge cases, and convention compliance. Write your findings to orchestrator-workspace/step-04-review/output.md."
+```
+
 ## Guidelines
 
 These are principles, not rigid rules. Use your judgment to adapt based on the situation:
