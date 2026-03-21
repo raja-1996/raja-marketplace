@@ -1,6 +1,6 @@
 {
   "name": "virtual-team",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A virtual software team of 17 specialized personas for Claude Code. Each skill embodies a distinct role with its own mental model and priorities — from brainstorming to security review. Includes an Orchestrator that plans and delegates to sub-agents. Auto-triggers based on context or invoke manually via slash commands.",
   "author": {
     "name": "raja-1996"
@@ -26,7 +26,8 @@
     "doc-keeper",
     "explorer",
     "rewriter",
-    "orchestrator"
+    "orchestrator",
+    "librarian"
   ],
   "skills": "./skills/"
 }
