@@ -36,6 +36,7 @@ The orchestrator dispatches sub-agents using these virtual team roles:
 | **Tester** | `qa` | Write and run tests, verify correctness, prove edge cases |
 | **Fixer** | `debugger` / `optimizer` | Apply review feedback, fix bugs, improve performance |
 | **Synthesizer** | `doc-keeper` | Combine outputs, update sprint files, write summaries |
+| **Verifier** | `explorer` | Confirm sub-agent outputs exist and match expectations (file presence, content spot-checks) |
 
 ## Step 1: Understand the Task
 
@@ -91,7 +92,7 @@ For each step:
    - Pass only the context it needs (not the full history)
    - Specify exact output format and where to write results
 
-2. **Inspect the output.** Decide:
+2. **Inspect the output via a sub-agent.** Do NOT verify outputs directly (e.g., reading files, running searches, or checking existence yourself). Instead, dispatch a lightweight **Verifier** sub-agent (`explorer`, Haiku) to confirm the output matches expectations. Then decide:
    - Good enough → move to next step
    - Needs refinement → send to a Reviewer sub-agent or re-dispatch with a better prompt
    - Fundamentally wrong → escalate to a higher-tier model
@@ -174,12 +175,21 @@ If the orchestrator writes the answer in the prompt, the sub-agent becomes a rub
 ✅ Good: "Review the login function in src/auth/login.ts. Check for security issues, edge cases, and convention compliance. Write your findings to orchestrator-workspace/step-04-review/output.md."
 ```
 
+**Verifying outputs via sub-agent, not directly:**
+```
+❌ Bad: (Orchestrator reads files, runs Glob/Grep to check if files were created)
+✅ Good: Dispatch a Verifier sub-agent:
+   "You are the Explorer from a virtual software team. Confirm that the following files
+   exist and are non-empty: e2e/maestro/*.yaml (expect 6 files). Report back with a
+   list of found files and any missing ones."
+```
+
 ## Guidelines
 
 These are principles, not rigid rules. Use your judgment to adapt based on the situation:
 
 - **Plan proportionally.** Big tasks need real plans. Small tasks might just need a quick outline or none at all.
-- **Delegate by default.** The orchestrator's strength is coordination, but if it makes sense to handle something directly, do it.
+- **Delegate by default — including verification.** Do not directly read files, run searches, or check outputs yourself after a sub-agent step. Dispatch a Verifier sub-agent (`explorer`, Haiku) to confirm results. The orchestrator's job is coordination, not execution.
 - **Prefer focused sub-agents.** Atomic tasks tend to produce better results, but don't split things artificially.
 - **Be transparent about model choices.** Show which tier in the plan so the user can override if they want.
 - **Fail forward.** If a sub-agent produces bad output, diagnose before re-running.
