@@ -29,8 +29,7 @@ The orchestrator dispatches sub-agents using these virtual team roles:
 | Sub-Agent Type | Virtual Team Role | Use For |
 |---|---|---|
 | **Analyzer** | `explorer` / `analyst` | Parse files, extract structure, understand existing code or data |
-| **Planner** | `strategist` / `engineering-manager` | Break goals into ordered tasks, prioritize, create sprint plans |
-| **Architect** | `architect` | Design system structure, choose patterns, define contracts |
+| **Planner** | `architect` | Deep codebase analysis, produce technical blueprint (what to change, where, how) |
 | **Coder** | `developer` | Implement features, write functions, build components |
 | **Reviewer** | `reviewer` / `security` | Assess code quality, check conventions, find vulnerabilities |
 | **Tester** | `qa` | Write and run tests, verify correctness, prove edge cases |
