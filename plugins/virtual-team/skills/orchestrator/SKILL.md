@@ -45,19 +45,19 @@ Read the user's request and identify:
 - What quality constraints exist? (must pass tests, follow conventions, needs security review)
 - How much user oversight is wanted? (autonomous vs. checkpoint-heavy)
 
-## Step 2: Create an Orchestration Plan
+## Step 2: Planning Phase
 
-Before doing significant work, sketch a plan. Consult `references/orchestration-patterns.md` for composition patterns and `references/model-guide.md` for model selection — use these as starting points, not rigid templates.
+Before executing, **dispatch a Planner sub-agent** (`strategist` / `engineering-manager`, Sonnet) to produce the implementation plan. This is a dedicated step — do not skip it or fold it into analysis.
 
-A plan might include:
-- Sub-agent type and virtual team role
-- Recommended model tier (Haiku / Sonnet / Opus)
-- Clear inputs and expected outputs
-- Dependencies on prior steps
-- Checkpoints where the user should review
+The Planner sub-agent should:
+- Read the task description and any analysis output from Step 1
+- Consult `references/orchestration-patterns.md` for composition patterns and `references/model-guide.md` for model selection
+- Produce a concrete, ordered list of steps with sub-agent type, role, model tier, inputs, outputs, and dependencies
+- Write the plan to **`orchestrator-workspace/plan.md`**
 
-**Always print the orchestration plan before executing — no exceptions.**
-Display it in a clear, readable format like:
+**After the Planner finishes, do three things — all three, every time:**
+
+1. **Display the full plan to the user** in a clear, readable format:
 
 ```
 ## Orchestration Plan
@@ -67,24 +67,23 @@ Step 1 — Analyzer (explorer, Haiku)
   Input:  sprint.md
   Output: orchestrator-workspace/step-01-analysis/output.md
 
-Step 2 — Planner (engineering-manager, Sonnet)
-  What:   Determine execution order and flag any blockers or ambiguities
-  Input:  step-01 output
-  Output: orchestrator-workspace/step-02-plan/output.md
-
-Step 3 — Coder (developer, Sonnet)
+Step 2 — Coder (developer, Sonnet)
   What:   Implement the feature according to the plan and existing conventions
-  Input:  step-02 output
-  Output: orchestrator-workspace/step-03-code/
+  Input:  step-01 output + orchestrator-workspace/plan.md
+  Output: orchestrator-workspace/step-02-code/
 
 ...
 
 Proceeding with execution.
 ```
 
-Each step must include a `What:` line — one sentence describing the concrete action the sub-agent will take. This makes the plan scannable and helps the user understand what is happening at a glance.
+Each step must include a `What:` line — one sentence describing the concrete action the sub-agent will take.
 
-Print the plan, then immediately proceed. Do not wait for user approval unless a checkpoint is explicitly required.
+2. **Confirm `orchestrator-workspace/plan.md` is written** with the full plan content so it exists on disk for every subsequent agent.
+
+3. **Pass `orchestrator-workspace/plan.md` as context** to every subsequent sub-agent. Each agent should be told: *"The full orchestration plan is at orchestrator-workspace/plan.md — read it for context on where this step fits."*
+
+Display the plan, then immediately proceed. Do not wait for user approval unless a checkpoint is explicitly required.
 
 ## Step 3: Execute Step by Step
 
