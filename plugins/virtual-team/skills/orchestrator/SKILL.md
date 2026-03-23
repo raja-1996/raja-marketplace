@@ -69,7 +69,7 @@ The Planner sub-agent should:
 - Read the task description and any analysis output from Step 1
 - Consult `references/orchestration-patterns.md` for composition patterns and `references/model-guide.md` for model selection
 - Produce a concrete, ordered list of steps with sub-agent type, role, model tier, inputs, outputs, and dependencies
-- **Always include unit test and integration test steps** — every plan must have a Tester sub-agent covering unit tests for individual functions/components and integration tests for end-to-end flows. Do not treat testing as optional.
+- **Explicitly decide on testing** — evaluate whether unit tests and integration tests are needed for this task. If yes, include a Tester sub-agent step for each. If not needed, explicitly state `Unit tests: not required — <reason>` and/or `Integration tests: not required — <reason>` in the plan. Never silently skip testing; always make the decision visible.
 - Write the plan to **`{WORKSPACE}/plan.md`**
 
 **After the Planner finishes, do three things — all three, every time:**
