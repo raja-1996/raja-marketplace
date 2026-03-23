@@ -168,7 +168,7 @@ Example:
 
 ## Step 6: Invoke the Librarian
 
-**After every orchestration run that changed or created files, dispatch a Librarian sub-agent** to update `CLAUDE.md` files for any affected directories.
+**After every orchestration run that changed or created files, dispatch a Librarian sub-agent (`doc-keeper`, Haiku)** to update `CLAUDE.md` files for any affected directories.
 
 The Librarian should:
 - Receive the list of all files written or modified during the run (from workspace outputs)
