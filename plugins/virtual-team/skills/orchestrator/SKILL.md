@@ -63,14 +63,17 @@ Display it in a clear, readable format like:
 ## Orchestration Plan
 
 Step 1 — Analyzer (explorer, Haiku)
+  What:   Parse the sprint file, extract task list, statuses, and dependencies
   Input:  sprint.md
   Output: orchestrator-workspace/step-01-analysis/output.md
 
 Step 2 — Planner (engineering-manager, Sonnet)
+  What:   Determine execution order and flag any blockers or ambiguities
   Input:  step-01 output
   Output: orchestrator-workspace/step-02-plan/output.md
 
 Step 3 — Coder (developer, Sonnet)
+  What:   Implement the feature according to the plan and existing conventions
   Input:  step-02 output
   Output: orchestrator-workspace/step-03-code/
 
@@ -78,6 +81,8 @@ Step 3 — Coder (developer, Sonnet)
 
 Proceeding with execution.
 ```
+
+Each step must include a `What:` line — one sentence describing the concrete action the sub-agent will take. This makes the plan scannable and helps the user understand what is happening at a glance.
 
 Print the plan, then immediately proceed. Do not wait for user approval unless a checkpoint is explicitly required.
 
