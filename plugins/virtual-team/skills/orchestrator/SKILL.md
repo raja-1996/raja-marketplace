@@ -105,7 +105,25 @@ For each step:
 
 4. **Save all outputs** to the workspace for traceability.
 
-## Step 4: Synthesize and Deliver
+## Step 4: Extract Learnings from Reviews
+
+**After every Reviewer step**, scan the review output for mistakes that are generic enough to recur — things like missing input validation, inconsistent error handling, wrong abstraction boundaries, insecure patterns, or violated conventions. Append them to `docs/learnings.md` in the project:
+
+```markdown
+## [YYYY-MM-DD] — <Brief context, e.g. "notifications API refactor">
+
+- <Mistake pattern and how to avoid it>
+- <Another mistake pattern>
+```
+
+**Rules:**
+- Only capture **generic, reusable lessons** — not one-off fixes specific to the current code.
+- Phrase each entry as a pattern to avoid, not just a description of what went wrong (e.g. "Don't call external APIs inside a loop without batching" not "line 42 had an N+1 call").
+- If `docs/learnings.md` doesn't exist, create it with the header `# Learnings`.
+- Read the file first and **skip any lesson already recorded** to avoid duplicates.
+- This step is lightweight — do it directly, no sub-agent needed.
+
+## Step 5: Synthesize and Deliver
 
 After all steps complete:
 - Collect final artifacts
