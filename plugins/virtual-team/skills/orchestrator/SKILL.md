@@ -63,12 +63,13 @@ This `WORKSPACE` path is your root for everything that follows — plan.md, step
 
 ## Step 2: Planning Phase
 
-Before executing, **dispatch a Planner sub-agent** (`strategist` / `engineering-manager`, Sonnet) to produce the implementation plan. This is a dedicated step — do not skip it or fold it into analysis.
+Before executing, **dispatch a Planner sub-agent** (`strategist` / `engineering-manager`, **Opus** — always use Opus for planning) to produce the implementation plan. This is a dedicated step — do not skip it or fold it into analysis.
 
 The Planner sub-agent should:
 - Read the task description and any analysis output from Step 1
 - Consult `references/orchestration-patterns.md` for composition patterns and `references/model-guide.md` for model selection
 - Produce a concrete, ordered list of steps with sub-agent type, role, model tier, inputs, outputs, and dependencies
+- **Always include unit test and integration test steps** — every plan must have a Tester sub-agent covering unit tests for individual functions/components and integration tests for end-to-end flows. Do not treat testing as optional.
 - Write the plan to **`{WORKSPACE}/plan.md`**
 
 **After the Planner finishes, do three things — all three, every time:**
@@ -165,7 +166,27 @@ Example:
 - This file lives at the top level — `orchestrator-workspace/progress.md` — not inside the task workspace, so any orchestrator can read it without knowing individual workspace paths.
 - Do this directly, no sub-agent needed.
 
-## Step 6: Synthesize and Deliver
+## Step 6: Invoke the Librarian
+
+**After every orchestration run that changed or created files, dispatch a Librarian sub-agent** to update `CLAUDE.md` files for any affected directories.
+
+The Librarian should:
+- Receive the list of all files written or modified during the run (from workspace outputs)
+- For each affected directory that has (or should have) a `CLAUDE.md`, update it to reflect:
+  - New files added and what they do
+  - Existing files that changed significantly
+  - Any new conventions, patterns, or dependencies introduced
+- Keep each `CLAUDE.md` entry concise — one or two lines per file is enough
+
+**Dispatch prompt pattern:**
+> "You are the Librarian from a virtual software team. Your job is to keep `CLAUDE.md` files accurate and up to date. The following files were changed during this orchestration run: [list]. Review those files and update the relevant `CLAUDE.md` files so future agents understand what each file does and any conventions to follow. Do not rewrite sections unrelated to the changed files."
+
+**Rules:**
+- Only update `CLAUDE.md` entries for files that actually changed — don't touch unrelated sections.
+- If a directory has no `CLAUDE.md` and multiple files were changed there, create one.
+- This step is always last — run it after tests pass and the workspace is finalized.
+
+## Step 7: Synthesize and Deliver
 
 After all steps complete:
 - Collect final artifacts
@@ -208,25 +229,28 @@ These are starting points — adapt, skip steps, combine steps, or invent new wo
 ### Sprint Task Execution
 When the user has a sprint file and wants tasks implemented:
 1. **Analyzer** (`explorer`, Haiku): Parse sprint file, extract tasks with statuses and dependencies
-2. **Planner** (`engineering-manager`, Sonnet): Determine execution order
+2. **Planner** (`engineering-manager`, **Opus**): Determine execution order, include unit + integration test steps
 3. For each task:
    - **Coder** (`developer`, Sonnet): Implement the task
    - **Reviewer** (`reviewer`, Sonnet): Review against spec and conventions
    - **Fixer** (`debugger`, Sonnet): Apply review fixes
-   - **Tester** (`qa`, Sonnet): Write and run tests
+   - **Tester** (`qa`, Sonnet): Write and run unit tests + integration tests
 4. **Synthesizer** (`doc-keeper`, Haiku): Update sprint file with completion status
+5. **Librarian** (`doc-keeper`, Haiku): Update `CLAUDE.md` files for all changed directories
 
 ### Feature Implementation
-1. **Planner** (`strategist` + `engineering-manager`, Sonnet/Opus): Break feature into steps
+1. **Planner** (`strategist` + `engineering-manager`, **Opus**): Break feature into steps, include test plan
 2. For each step: **Coder** → **Reviewer** → **Fixer** cycle
-3. **Tester** (`qa`, Sonnet): Integration tests
+3. **Tester** (`qa`, Sonnet): Unit tests + integration tests
 4. **Synthesizer** (`doc-keeper`, Haiku): Summary and docs
+5. **Librarian** (`doc-keeper`, Haiku): Update `CLAUDE.md` files for all changed directories
 
 ### Code Review Pipeline
 1. **Analyzer** (`explorer`, Haiku): Parse code, identify components
 2. **Reviewer** (`reviewer`, Sonnet): General quality review
 3. **Reviewer** (`security`, Opus): Security and correctness (for critical code)
 4. **Synthesizer** (`doc-keeper`, Sonnet): Combined actionable report
+5. **Librarian** (`doc-keeper`, Haiku): Update `CLAUDE.md` if review led to file changes
 
 ## Dispatching Sub-Agents Well
 
