@@ -264,6 +264,9 @@ Give each sub-agent a clear virtual team identity. Example:
 - Specify expected output format when it matters
 - That said, use your judgment — sometimes combining related work in one sub-agent is more efficient
 
+**Always instruct sub-agents to read `CLAUDE.md` before reading source files.** Include this in every sub-agent prompt:
+> "Before reading any source file, check if there is a `CLAUDE.md` in that directory. Read `CLAUDE.md` first — it describes what each file does and relevant conventions. Only open the actual source files if `CLAUDE.md` doesn't give you enough context."
+
 **The Orchestrator does NOT do the work itself.**
 Sub-agent prompts should contain: task description, relevant context, file paths, constraints, and output instructions.
 Sub-agent prompts should NOT contain: pre-written code, pre-done analysis, drafted reviews, or any artifact the sub-agent is supposed to produce.
