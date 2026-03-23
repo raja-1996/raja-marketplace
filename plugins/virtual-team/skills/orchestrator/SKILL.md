@@ -139,7 +139,33 @@ For each step:
 - Read the file first and **skip any lesson already recorded** to avoid duplicates.
 - This step is lightweight — do it directly, no sub-agent needed.
 
-## Step 5: Synthesize and Deliver
+## Step 5: Update Progress Log
+
+**After every orchestration run, append one line to `orchestrator-workspace/progress.md`.**
+
+Format:
+```
+| {YYYY-MM-DD HH:mm} | {task-slug} | {done|partial|failed} | {one sentence: what was done and outcome} | {WORKSPACE} |
+```
+
+Example:
+```
+| 2026-03-23 14:45 | notifications-refactor | done | Refactored notifications API, added async support, all tests passing | orchestrator-workspace/20260323-1445-notifications-refactor/ |
+```
+
+**Rules:**
+- One line per run — keep it scannable.
+- If `progress.md` doesn't exist, create it with this header first:
+  ```
+  # Orchestrator Progress
+  | Timestamp | Task | Status | Summary | Workspace |
+  |---|---|---|---|---|
+  ```
+- Status is `done` (all steps completed), `partial` (stopped mid-run), or `failed` (critical step failed).
+- This file lives at the top level — `orchestrator-workspace/progress.md` — not inside the task workspace, so any orchestrator can read it without knowing individual workspace paths.
+- Do this directly, no sub-agent needed.
+
+## Step 6: Synthesize and Deliver
 
 After all steps complete:
 - Collect final artifacts
@@ -152,6 +178,7 @@ Each orchestration run gets its own isolated directory. Never write outside it.
 
 ```
 orchestrator-workspace/
+├── progress.md                          ← one line per run, shared across all tasks
 └── {YYYYMMDD-HHmm}-{task-slug}/        ← unique per run
     ├── plan.md                          ← full orchestration plan (written by Planner, read by all)
     ├── step-01-{role}/
