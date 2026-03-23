@@ -29,15 +29,14 @@ The orchestrator dispatches sub-agents using these virtual team roles:
 | Sub-Agent Type | Virtual Team Role | Use For |
 |---|---|---|
 | **Analyzer** | `explorer` / `analyst` | Parse files, extract structure, understand existing code or data |
-| **Planner** | `strategist` / `engineering-manager` | Break goals into ordered tasks, prioritize, create sprint plans |
-| **Architect** | `architect` | Design system structure, choose patterns, define contracts |
+| **Planner** | `architect` | Deep codebase analysis, produce technical blueprint (what to change, where, how) |
 | **Coder** | `developer` | Implement features, write functions, build components |
 | **Reviewer** | `reviewer` / `security` | Assess code quality, check conventions, find vulnerabilities |
 | **Tester** | `qa` | Write and run tests, verify correctness, prove edge cases |
 | **Fixer** | `debugger` / `optimizer` | Apply review feedback, fix bugs, improve performance |
 | **Synthesizer** | `doc-keeper` | Combine outputs, update sprint files, write summaries |
 
-## Step 1: Understand the Task
+## Step 1: Understand the Task and Create a Workspace
 
 Read the user's request and identify:
 - What is the desired end state?
@@ -45,41 +44,67 @@ Read the user's request and identify:
 - What quality constraints exist? (must pass tests, follow conventions, needs security review)
 - How much user oversight is wanted? (autonomous vs. checkpoint-heavy)
 
-## Step 2: Create an Orchestration Plan
+**Immediately generate a unique workspace for this task** and use it for every file written during the run:
 
-Before doing significant work, sketch a plan. Consult `references/orchestration-patterns.md` for composition patterns and `references/model-guide.md` for model selection — use these as starting points, not rigid templates.
+```
+WORKSPACE = orchestrator-workspace/{YYYYMMDD-HHmm}-{task-slug}/
+```
 
-A plan might include:
-- Sub-agent type and virtual team role
-- Recommended model tier (Haiku / Sonnet / Opus)
-- Clear inputs and expected outputs
-- Dependencies on prior steps
-- Checkpoints where the user should review
+- `{YYYYMMDD-HHmm}` — timestamp at the start of the run (e.g. `20260323-1445`)
+- `{task-slug}` — 2–4 word kebab-case summary of the task (e.g. `auth-login-endpoint`, `notifications-refactor`, `sprint-3-tasks`)
 
-**Always print the orchestration plan before executing — no exceptions.**
-Display it in a clear, readable format like:
+Example: `orchestrator-workspace/20260323-1445-notifications-refactor/`
+
+**Announce the workspace path to the user** right after understanding the task:
+> `Workspace: orchestrator-workspace/20260323-1445-notifications-refactor/`
+
+This `WORKSPACE` path is your root for everything that follows — plan.md, step outputs, and final artifacts all live inside it. Pass the full path explicitly to every sub-agent so nothing is written to the wrong place.
+
+## Step 2: Planning Phase
+
+Before executing, **dispatch a Planner sub-agent** (`architect`, **Opus** — always use Opus for planning) to produce a deep technical implementation plan. This is a dedicated step — do not skip it or fold it into analysis.
+
+The Planner sub-agent should:
+- Read `CLAUDE.md` files for affected directories first, then dive into source files as needed
+- Thoroughly understand the codebase, existing patterns, conventions, and constraints relevant to the task
+- Produce a concrete technical plan: **what needs to change, in which files, and how** — not which sub-agents to run
+- **Explicitly decide on testing** — evaluate whether unit tests and integration tests are needed. If yes, describe what needs to be tested. If not, state `Unit tests: not required — <reason>`. Never silently skip this decision.
+- Write the plan to **`{WORKSPACE}/plan.md`**
+
+The Planner's job is to deeply understand the problem and produce a technical blueprint. **The orchestrator then reads that plan and decides the execution steps itself** — which sub-agents to dispatch, in what order, with what inputs and outputs.
+
+**After the Planner finishes, the orchestrator does three things — all three, every time:**
+
+1. **Derive the execution steps from the plan** and display them to the user:
 
 ```
 ## Orchestration Plan
+Workspace: orchestrator-workspace/20260323-1445-notifications-refactor/
+
+Technical plan: {WORKSPACE}/plan.md
 
 Step 1 — Analyzer (explorer, Haiku)
-  Input:  sprint.md
-  Output: orchestrator-workspace/step-01-analysis/output.md
+  What:   Parse the notification files and extract current structure and gaps
+  Input:  backend/app/api/v1/notifications.py
+  Output: {WORKSPACE}/step-01-analysis/output.md
 
-Step 2 — Planner (engineering-manager, Sonnet)
-  Input:  step-01 output
-  Output: orchestrator-workspace/step-02-plan/output.md
-
-Step 3 — Coder (developer, Sonnet)
-  Input:  step-02 output
-  Output: orchestrator-workspace/step-03-code/
+Step 2 — Coder (developer, Sonnet)
+  What:   Implement the refactor according to the plan and existing conventions
+  Input:  {WORKSPACE}/step-01-analysis/output.md + {WORKSPACE}/plan.md
+  Output: {WORKSPACE}/step-02-code/
 
 ...
 
 Proceeding with execution.
 ```
 
-Print the plan, then immediately proceed. Do not wait for user approval unless a checkpoint is explicitly required.
+Each step must include a `What:` line — one sentence describing the concrete action the sub-agent will take.
+
+2. **Confirm `{WORKSPACE}/plan.md` is written** with the full technical plan so it exists on disk for every subsequent agent.
+
+3. **Pass `{WORKSPACE}/plan.md` as context** to every subsequent sub-agent. Each agent should be told: *"The full technical plan is at `{WORKSPACE}/plan.md` — read it to understand what needs to be done and how."*
+
+Display the steps, then immediately proceed. Do not wait for user approval unless a checkpoint is explicitly required.
 
 ## Step 3: Execute Step by Step
 
@@ -100,7 +125,71 @@ For each step:
 
 4. **Save all outputs** to the workspace for traceability.
 
-## Step 4: Synthesize and Deliver
+## Step 4: Extract Learnings from Reviews
+
+**After every Reviewer step**, scan the review output for mistakes that are generic enough to recur — things like missing input validation, inconsistent error handling, wrong abstraction boundaries, insecure patterns, or violated conventions. Append them to `docs/learnings.md` in the project:
+
+```markdown
+## [YYYY-MM-DD] — <Brief context, e.g. "notifications API refactor">
+
+- <Mistake pattern and how to avoid it>
+- <Another mistake pattern>
+```
+
+**Rules:**
+- Only capture **generic, reusable lessons** — not one-off fixes specific to the current code.
+- Phrase each entry as a pattern to avoid, not just a description of what went wrong (e.g. "Don't call external APIs inside a loop without batching" not "line 42 had an N+1 call").
+- If `docs/learnings.md` doesn't exist, create it with the header `# Learnings`.
+- Read the file first and **skip any lesson already recorded** to avoid duplicates.
+- This step is lightweight — do it directly, no sub-agent needed.
+
+## Step 5: Update Progress Log
+
+**After every orchestration run, append one line to `orchestrator-workspace/progress.md`.**
+
+Format:
+```
+| {YYYY-MM-DD HH:mm} | {task-slug} | {done|partial|failed} | {one sentence: what was done and outcome} | {WORKSPACE} |
+```
+
+Example:
+```
+| 2026-03-23 14:45 | notifications-refactor | done | Refactored notifications API, added async support, all tests passing | orchestrator-workspace/20260323-1445-notifications-refactor/ |
+```
+
+**Rules:**
+- One line per run — keep it scannable.
+- If `progress.md` doesn't exist, create it with this header first:
+  ```
+  # Orchestrator Progress
+  | Timestamp | Task | Status | Summary | Workspace |
+  |---|---|---|---|---|
+  ```
+- Status is `done` (all steps completed), `partial` (stopped mid-run), or `failed` (critical step failed).
+- This file lives at the top level — `orchestrator-workspace/progress.md` — not inside the task workspace, so any orchestrator can read it without knowing individual workspace paths.
+- Do this directly, no sub-agent needed.
+
+## Step 6: Invoke the Librarian
+
+**After every orchestration run that changed or created files, dispatch a Librarian sub-agent (`doc-keeper`, Haiku)** to update `CLAUDE.md` files for any affected directories.
+
+The Librarian should:
+- Receive the list of all files written or modified during the run (from workspace outputs)
+- For each affected directory that has (or should have) a `CLAUDE.md`, update it to reflect:
+  - New files added and what they do
+  - Existing files that changed significantly
+  - Any new conventions, patterns, or dependencies introduced
+- Keep each `CLAUDE.md` entry concise — one or two lines per file is enough
+
+**Dispatch prompt pattern:**
+> "You are the Librarian from a virtual software team. Your job is to keep `CLAUDE.md` files accurate and up to date. The following files were changed during this orchestration run: [list]. Review those files and update the relevant `CLAUDE.md` files so future agents understand what each file does and any conventions to follow. Do not rewrite sections unrelated to the changed files."
+
+**Rules:**
+- Only update `CLAUDE.md` entries for files that actually changed — don't touch unrelated sections.
+- If a directory has no `CLAUDE.md` and multiple files were changed there, create one.
+- This step is always last — run it after tests pass and the workspace is finalized.
+
+## Step 7: Synthesize and Deliver
 
 After all steps complete:
 - Collect final artifacts
@@ -109,20 +198,31 @@ After all steps complete:
 
 ## Workspace Structure
 
+Each orchestration run gets its own isolated directory. Never write outside it.
+
 ```
 orchestrator-workspace/
-├── plan.md                    ← Approved orchestration plan
-├── step-01-analysis/
-│   ├── task.md                ← What the sub-agent was asked
-│   └── output.md              ← What it produced
-├── step-02-plan/
-│   └── ...
-├── step-03-code/
-│   ├── output/                ← Code files produced
-│   └── ...
-├── step-04-review/
-│   └── ...
-└── final/                     ← Assembled deliverables
+├── progress.md                          ← one line per run, shared across all tasks
+└── {YYYYMMDD-HHmm}-{task-slug}/        ← unique per run
+    ├── plan.md                          ← full orchestration plan (written by Planner, read by all)
+    ├── step-01-{role}/
+    │   ├── task.md                      ← prompt given to the sub-agent
+    │   └── output.md                    ← what it produced
+    ├── step-02-{role}/
+    │   └── ...
+    ├── step-03-{role}/
+    │   ├── output/                      ← code files produced by Coder steps
+    │   └── ...
+    └── final/                           ← assembled deliverables
+```
+
+**Passing files between agents:** always use the full path from the workspace root. When dispatching a sub-agent, list every file it needs explicitly:
+```
+Context files:
+  - {WORKSPACE}/plan.md
+  - {WORKSPACE}/step-01-analysis/output.md
+Output:
+  - {WORKSPACE}/step-02-code/output/
 ```
 
 ## Example Workflows
@@ -132,25 +232,28 @@ These are starting points — adapt, skip steps, combine steps, or invent new wo
 ### Sprint Task Execution
 When the user has a sprint file and wants tasks implemented:
 1. **Analyzer** (`explorer`, Haiku): Parse sprint file, extract tasks with statuses and dependencies
-2. **Planner** (`engineering-manager`, Sonnet): Determine execution order
+2. **Planner** (`architect`, **Opus**): Deep codebase analysis, produce technical plan — orchestrator derives execution steps from it
 3. For each task:
    - **Coder** (`developer`, Sonnet): Implement the task
    - **Reviewer** (`reviewer`, Sonnet): Review against spec and conventions
    - **Fixer** (`debugger`, Sonnet): Apply review fixes
-   - **Tester** (`qa`, Sonnet): Write and run tests
+   - **Tester** (`qa`, Sonnet): Write and run unit tests + integration tests
 4. **Synthesizer** (`doc-keeper`, Haiku): Update sprint file with completion status
+5. **Librarian** (`doc-keeper`, Haiku): Update `CLAUDE.md` files for all changed directories
 
 ### Feature Implementation
-1. **Planner** (`strategist` + `engineering-manager`, Sonnet/Opus): Break feature into steps
+1. **Planner** (`architect`, **Opus**): Deep codebase analysis, produce technical plan — orchestrator derives execution steps from it
 2. For each step: **Coder** → **Reviewer** → **Fixer** cycle
-3. **Tester** (`qa`, Sonnet): Integration tests
+3. **Tester** (`qa`, Sonnet): Unit tests + integration tests
 4. **Synthesizer** (`doc-keeper`, Haiku): Summary and docs
+5. **Librarian** (`doc-keeper`, Haiku): Update `CLAUDE.md` files for all changed directories
 
 ### Code Review Pipeline
 1. **Analyzer** (`explorer`, Haiku): Parse code, identify components
 2. **Reviewer** (`reviewer`, Sonnet): General quality review
 3. **Reviewer** (`security`, Opus): Security and correctness (for critical code)
 4. **Synthesizer** (`doc-keeper`, Sonnet): Combined actionable report
+5. **Librarian** (`doc-keeper`, Haiku): Update `CLAUDE.md` if review led to file changes
 
 ## Dispatching Sub-Agents Well
 
@@ -163,6 +266,9 @@ Give each sub-agent a clear virtual team identity. Example:
 - Pass relevant context rather than full conversation history
 - Specify expected output format when it matters
 - That said, use your judgment — sometimes combining related work in one sub-agent is more efficient
+
+**Always instruct sub-agents to read `CLAUDE.md` before reading source files.** Include this in every sub-agent prompt:
+> "Before reading any source file, check if there is a `CLAUDE.md` in that directory. Read `CLAUDE.md` first — it describes what each file does and relevant conventions. Only open the actual source files if `CLAUDE.md` doesn't give you enough context."
 
 **The Orchestrator does NOT do the work itself.**
 Sub-agent prompts should contain: task description, relevant context, file paths, constraints, and output instructions.
@@ -185,35 +291,3 @@ These are principles, not rigid rules. Use your judgment to adapt based on the s
 - **Fail forward.** If a sub-agent produces bad output, diagnose before re-running.
 - **Surface what matters.** Checkpoint on important decisions. Run mechanical steps autonomously.
 
-## Action Log — Document Your Work
-
-**After completing any orchestration run, log to `docs/roles/activity-log.md` in the user's project.**
-
-Append a new entry at the **top** of the file (newest first):
-
-```markdown
-## [YYYY-MM-DD] — <Brief title>
-
-**Role:** Orchestrator
-**Action:** <orchestration | sprint-execution | feature-build | review-pipeline>
-**Summary:** <1-2 sentences: what was orchestrated and the outcome>
-
-### Details
-- <Number of steps in the plan>
-- <Sub-agents dispatched and their roles>
-- <Models used per step>
-- <Workspace path>
-
-### Outcome
-- <Final deliverables produced>
-- <Any issues encountered and how resolved>
-
-### Next Steps
-- <Recommended follow-up role or action>
-```
-
-**Rules for logging:**
-- Always append new entries at the TOP of the file (newest first)
-- If the file doesn't exist, create it with a header: `# Activity Log`
-- Include the full step list from the orchestration plan
-- Link to the `orchestrator-workspace/` for traceability
