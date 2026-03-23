@@ -37,13 +37,29 @@ The orchestrator dispatches sub-agents using these virtual team roles:
 | **Fixer** | `debugger` / `optimizer` | Apply review feedback, fix bugs, improve performance |
 | **Synthesizer** | `doc-keeper` | Combine outputs, update sprint files, write summaries |
 
-## Step 1: Understand the Task
+## Step 1: Understand the Task and Create a Workspace
 
 Read the user's request and identify:
 - What is the desired end state?
 - What inputs are available? (files, sprint plans, code, specs)
 - What quality constraints exist? (must pass tests, follow conventions, needs security review)
 - How much user oversight is wanted? (autonomous vs. checkpoint-heavy)
+
+**Immediately generate a unique workspace for this task** and use it for every file written during the run:
+
+```
+WORKSPACE = orchestrator-workspace/{YYYYMMDD-HHmm}-{task-slug}/
+```
+
+- `{YYYYMMDD-HHmm}` — timestamp at the start of the run (e.g. `20260323-1445`)
+- `{task-slug}` — 2–4 word kebab-case summary of the task (e.g. `auth-login-endpoint`, `notifications-refactor`, `sprint-3-tasks`)
+
+Example: `orchestrator-workspace/20260323-1445-notifications-refactor/`
+
+**Announce the workspace path to the user** right after understanding the task:
+> `Workspace: orchestrator-workspace/20260323-1445-notifications-refactor/`
+
+This `WORKSPACE` path is your root for everything that follows — plan.md, step outputs, and final artifacts all live inside it. Pass the full path explicitly to every sub-agent so nothing is written to the wrong place.
 
 ## Step 2: Planning Phase
 
@@ -53,7 +69,7 @@ The Planner sub-agent should:
 - Read the task description and any analysis output from Step 1
 - Consult `references/orchestration-patterns.md` for composition patterns and `references/model-guide.md` for model selection
 - Produce a concrete, ordered list of steps with sub-agent type, role, model tier, inputs, outputs, and dependencies
-- Write the plan to **`orchestrator-workspace/plan.md`**
+- Write the plan to **`{WORKSPACE}/plan.md`**
 
 **After the Planner finishes, do three things — all three, every time:**
 
@@ -61,16 +77,17 @@ The Planner sub-agent should:
 
 ```
 ## Orchestration Plan
+Workspace: orchestrator-workspace/20260323-1445-notifications-refactor/
 
 Step 1 — Analyzer (explorer, Haiku)
-  What:   Parse the sprint file, extract task list, statuses, and dependencies
-  Input:  sprint.md
-  Output: orchestrator-workspace/step-01-analysis/output.md
+  What:   Parse the notification files and extract current structure and gaps
+  Input:  backend/app/api/v1/notifications.py
+  Output: {WORKSPACE}/step-01-analysis/output.md
 
 Step 2 — Coder (developer, Sonnet)
-  What:   Implement the feature according to the plan and existing conventions
-  Input:  step-01 output + orchestrator-workspace/plan.md
-  Output: orchestrator-workspace/step-02-code/
+  What:   Implement the refactor according to the plan and existing conventions
+  Input:  {WORKSPACE}/step-01-analysis/output.md + {WORKSPACE}/plan.md
+  Output: {WORKSPACE}/step-02-code/
 
 ...
 
@@ -79,9 +96,9 @@ Proceeding with execution.
 
 Each step must include a `What:` line — one sentence describing the concrete action the sub-agent will take.
 
-2. **Confirm `orchestrator-workspace/plan.md` is written** with the full plan content so it exists on disk for every subsequent agent.
+2. **Confirm `{WORKSPACE}/plan.md` is written** with the full plan content so it exists on disk for every subsequent agent.
 
-3. **Pass `orchestrator-workspace/plan.md` as context** to every subsequent sub-agent. Each agent should be told: *"The full orchestration plan is at orchestrator-workspace/plan.md — read it for context on where this step fits."*
+3. **Pass `{WORKSPACE}/plan.md` as context** to every subsequent sub-agent. Each agent should be told: *"The full orchestration plan is at `{WORKSPACE}/plan.md` — read it for context on where this step fits."*
 
 Display the plan, then immediately proceed. Do not wait for user approval unless a checkpoint is explicitly required.
 
@@ -131,20 +148,30 @@ After all steps complete:
 
 ## Workspace Structure
 
+Each orchestration run gets its own isolated directory. Never write outside it.
+
 ```
 orchestrator-workspace/
-├── plan.md                    ← Approved orchestration plan
-├── step-01-analysis/
-│   ├── task.md                ← What the sub-agent was asked
-│   └── output.md              ← What it produced
-├── step-02-plan/
-│   └── ...
-├── step-03-code/
-│   ├── output/                ← Code files produced
-│   └── ...
-├── step-04-review/
-│   └── ...
-└── final/                     ← Assembled deliverables
+└── {YYYYMMDD-HHmm}-{task-slug}/        ← unique per run
+    ├── plan.md                          ← full orchestration plan (written by Planner, read by all)
+    ├── step-01-{role}/
+    │   ├── task.md                      ← prompt given to the sub-agent
+    │   └── output.md                    ← what it produced
+    ├── step-02-{role}/
+    │   └── ...
+    ├── step-03-{role}/
+    │   ├── output/                      ← code files produced by Coder steps
+    │   └── ...
+    └── final/                           ← assembled deliverables
+```
+
+**Passing files between agents:** always use the full path from the workspace root. When dispatching a sub-agent, list every file it needs explicitly:
+```
+Context files:
+  - {WORKSPACE}/plan.md
+  - {WORKSPACE}/step-01-analysis/output.md
+Output:
+  - {WORKSPACE}/step-02-code/output/
 ```
 
 ## Example Workflows
