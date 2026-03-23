@@ -63,7 +63,7 @@ This `WORKSPACE` path is your root for everything that follows — plan.md, step
 
 ## Step 2: Planning Phase
 
-Before executing, **dispatch a Planner sub-agent** (`engineering-manager`, **Opus** — always use Opus for planning) to produce a deep technical implementation plan. This is a dedicated step — do not skip it or fold it into analysis.
+Before executing, **dispatch a Planner sub-agent** (`architect`, **Opus** — always use Opus for planning) to produce a deep technical implementation plan. This is a dedicated step — do not skip it or fold it into analysis.
 
 The Planner sub-agent should:
 - Read `CLAUDE.md` files for affected directories first, then dive into source files as needed
@@ -233,7 +233,7 @@ These are starting points — adapt, skip steps, combine steps, or invent new wo
 ### Sprint Task Execution
 When the user has a sprint file and wants tasks implemented:
 1. **Analyzer** (`explorer`, Haiku): Parse sprint file, extract tasks with statuses and dependencies
-2. **Planner** (`engineering-manager`, **Opus**): Deep codebase analysis, produce technical plan — orchestrator derives execution steps from it
+2. **Planner** (`architect`, **Opus**): Deep codebase analysis, produce technical plan — orchestrator derives execution steps from it
 3. For each task:
    - **Coder** (`developer`, Sonnet): Implement the task
    - **Reviewer** (`reviewer`, Sonnet): Review against spec and conventions
@@ -243,7 +243,7 @@ When the user has a sprint file and wants tasks implemented:
 5. **Librarian** (`doc-keeper`, Haiku): Update `CLAUDE.md` files for all changed directories
 
 ### Feature Implementation
-1. **Planner** (`engineering-manager`, **Opus**): Deep codebase analysis, produce technical plan — orchestrator derives execution steps from it
+1. **Planner** (`architect`, **Opus**): Deep codebase analysis, produce technical plan — orchestrator derives execution steps from it
 2. For each step: **Coder** → **Reviewer** → **Fixer** cycle
 3. **Tester** (`qa`, Sonnet): Unit tests + integration tests
 4. **Synthesizer** (`doc-keeper`, Haiku): Summary and docs
