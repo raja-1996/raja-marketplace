@@ -63,22 +63,26 @@ This `WORKSPACE` path is your root for everything that follows — plan.md, step
 
 ## Step 2: Planning Phase
 
-Before executing, **dispatch a Planner sub-agent** (`strategist` / `engineering-manager`, **Opus** — always use Opus for planning) to produce the implementation plan. This is a dedicated step — do not skip it or fold it into analysis.
+Before executing, **dispatch a Planner sub-agent** (`engineering-manager`, **Opus** — always use Opus for planning) to produce a deep technical implementation plan. This is a dedicated step — do not skip it or fold it into analysis.
 
 The Planner sub-agent should:
-- Read the task description and any analysis output from Step 1
-- Consult `references/orchestration-patterns.md` for composition patterns and `references/model-guide.md` for model selection
-- Produce a concrete, ordered list of steps with sub-agent type, role, model tier, inputs, outputs, and dependencies
-- **Explicitly decide on testing** — evaluate whether unit tests and integration tests are needed for this task. If yes, include a Tester sub-agent step for each. If not needed, explicitly state `Unit tests: not required — <reason>` and/or `Integration tests: not required — <reason>` in the plan. Never silently skip testing; always make the decision visible.
+- Read `CLAUDE.md` files for affected directories first, then dive into source files as needed
+- Thoroughly understand the codebase, existing patterns, conventions, and constraints relevant to the task
+- Produce a concrete technical plan: **what needs to change, in which files, and how** — not which sub-agents to run
+- **Explicitly decide on testing** — evaluate whether unit tests and integration tests are needed. If yes, describe what needs to be tested. If not, state `Unit tests: not required — <reason>`. Never silently skip this decision.
 - Write the plan to **`{WORKSPACE}/plan.md`**
 
-**After the Planner finishes, do three things — all three, every time:**
+The Planner's job is to deeply understand the problem and produce a technical blueprint. **The orchestrator then reads that plan and decides the execution steps itself** — which sub-agents to dispatch, in what order, with what inputs and outputs.
 
-1. **Display the full plan to the user** in a clear, readable format:
+**After the Planner finishes, the orchestrator does three things — all three, every time:**
+
+1. **Derive the execution steps from the plan** and display them to the user:
 
 ```
 ## Orchestration Plan
 Workspace: orchestrator-workspace/20260323-1445-notifications-refactor/
+
+Technical plan: {WORKSPACE}/plan.md
 
 Step 1 — Analyzer (explorer, Haiku)
   What:   Parse the notification files and extract current structure and gaps
@@ -97,11 +101,11 @@ Proceeding with execution.
 
 Each step must include a `What:` line — one sentence describing the concrete action the sub-agent will take.
 
-2. **Confirm `{WORKSPACE}/plan.md` is written** with the full plan content so it exists on disk for every subsequent agent.
+2. **Confirm `{WORKSPACE}/plan.md` is written** with the full technical plan so it exists on disk for every subsequent agent.
 
-3. **Pass `{WORKSPACE}/plan.md` as context** to every subsequent sub-agent. Each agent should be told: *"The full orchestration plan is at `{WORKSPACE}/plan.md` — read it for context on where this step fits."*
+3. **Pass `{WORKSPACE}/plan.md` as context** to every subsequent sub-agent. Each agent should be told: *"The full technical plan is at `{WORKSPACE}/plan.md` — read it to understand what needs to be done and how."*
 
-Display the plan, then immediately proceed. Do not wait for user approval unless a checkpoint is explicitly required.
+Display the steps, then immediately proceed. Do not wait for user approval unless a checkpoint is explicitly required.
 
 ## Step 3: Execute Step by Step
 
@@ -229,7 +233,7 @@ These are starting points — adapt, skip steps, combine steps, or invent new wo
 ### Sprint Task Execution
 When the user has a sprint file and wants tasks implemented:
 1. **Analyzer** (`explorer`, Haiku): Parse sprint file, extract tasks with statuses and dependencies
-2. **Planner** (`engineering-manager`, **Opus**): Determine execution order, include unit + integration test steps
+2. **Planner** (`engineering-manager`, **Opus**): Deep codebase analysis, produce technical plan — orchestrator derives execution steps from it
 3. For each task:
    - **Coder** (`developer`, Sonnet): Implement the task
    - **Reviewer** (`reviewer`, Sonnet): Review against spec and conventions
@@ -239,7 +243,7 @@ When the user has a sprint file and wants tasks implemented:
 5. **Librarian** (`doc-keeper`, Haiku): Update `CLAUDE.md` files for all changed directories
 
 ### Feature Implementation
-1. **Planner** (`strategist` + `engineering-manager`, **Opus**): Break feature into steps, include test plan
+1. **Planner** (`engineering-manager`, **Opus**): Deep codebase analysis, produce technical plan — orchestrator derives execution steps from it
 2. For each step: **Coder** → **Reviewer** → **Fixer** cycle
 3. **Tester** (`qa`, Sonnet): Unit tests + integration tests
 4. **Synthesizer** (`doc-keeper`, Haiku): Summary and docs
