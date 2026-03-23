@@ -26,15 +26,16 @@ Core question: **"What needs to happen, and who on the team should do each piece
 
 The orchestrator dispatches sub-agents using these virtual team roles:
 
-| Sub-Agent Type | Virtual Team Role | Use For |
-|---|---|---|
-| **Analyzer** | `explorer` / `analyst` | Parse files, extract structure, understand existing code or data |
-| **Planner** | `architect` | Deep codebase analysis, produce technical blueprint (what to change, where, how) |
-| **Coder** | `developer` | Implement features, write functions, build components |
-| **Reviewer** | `reviewer` / `security` | Assess code quality, check conventions, find vulnerabilities |
-| **Tester** | `qa` | Write and run tests, verify correctness, prove edge cases |
-| **Fixer** | `debugger` / `optimizer` | Apply review feedback, fix bugs, improve performance |
-| **Synthesizer** | `doc-keeper` | Combine outputs, update sprint files, write summaries |
+| Sub-Agent Type | Virtual Team Role | Skill File | Use For |
+|---|---|---|---|
+| **Analyzer** | `explorer` / `analyst` | `skills/explorer/SKILL.md` or `skills/analyst/SKILL.md` | Parse files, extract structure, understand existing code or data |
+| **Planner** | `architect` | `skills/architect/SKILL.md` | Deep codebase analysis, produce technical blueprint (what to change, where, how) |
+| **Coder** | `developer` | `skills/developer/SKILL.md` | Implement features, write functions, build components |
+| **Reviewer** | `reviewer` / `security` | `skills/reviewer/SKILL.md` or `skills/security/SKILL.md` | Assess code quality, check conventions, find vulnerabilities |
+| **Tester** | `qa` | `skills/qa/SKILL.md` | Write and run tests, verify correctness, prove edge cases |
+| **Fixer** | `debugger` / `optimizer` | `skills/debugger/SKILL.md` or `skills/optimizer/SKILL.md` | Apply review feedback, fix bugs, improve performance |
+| **Synthesizer** | `doc-keeper` | `skills/doc-keeper/SKILL.md` | Combine outputs, update sprint files, write summaries |
+| **Librarian** | `librarian` | `skills/librarian/SKILL.md` | Update `CLAUDE.md` files for changed directories |
 
 ## Step 1: Understand the Task and Create a Workspace
 
@@ -257,15 +258,18 @@ When the user has a sprint file and wants tasks implemented:
 
 ## Dispatching Sub-Agents Well
 
-Give each sub-agent a clear virtual team identity. Example:
+Give each sub-agent a clear virtual team identity and always include its skill file. Example:
 
-> "You are the Developer from a virtual software team. Your job is to write clean, working code. Implement the /api/auth/login endpoint as specified below. Write the result to orchestrator-workspace/step-03-code/auth.ts."
+> "You are the Developer from a virtual software team. Start by reading your skill file at `plugins/virtual-team/skills/developer/SKILL.md` — it defines your role and how to approach the work. Then implement the /api/auth/login endpoint as specified below. Write the result to orchestrator-workspace/step-03-code/auth.ts."
 
 **Tips for effective dispatch:**
 - Focused sub-agents with clear scope tend to produce better results
 - Pass relevant context rather than full conversation history
 - Specify expected output format when it matters
 - That said, use your judgment — sometimes combining related work in one sub-agent is more efficient
+
+**Always instruct sub-agents to read their skill file first.** Sub-agents do not inherit skills from the parent session — they start with a blank context. You must explicitly tell each sub-agent to read its skill file so it knows its role, mental model, and priorities. Include this in every sub-agent prompt:
+> "Before doing anything else, read your skill file at `plugins/virtual-team/skills/{role}/SKILL.md`. This defines your role, mental model, and how to approach your work."
 
 **Always instruct sub-agents to read `CLAUDE.md` before reading source files.** Include this in every sub-agent prompt:
 > "Before reading any source file, check if there is a `CLAUDE.md` in that directory. Read `CLAUDE.md` first — it describes what each file does and relevant conventions. Only open the actual source files if `CLAUDE.md` doesn't give you enough context."
